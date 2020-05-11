@@ -27,7 +27,7 @@ def hello():
         print('Password: ', mk_pass)
         flash('Initiating router connections for ' + mk_user)
         all_devices(input_username=mk_user, input_password=mk_pass)
-        print('Done')
+        print('Done.')
     else:
         flash('Error: Check the passwords')
     return render_template('index.html', form=form)
