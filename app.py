@@ -18,7 +18,7 @@ class ReusableForm(Form):
 
 
 @app.route("/", methods=['GET', 'POST'])
-def hello():
+def user_create():
     form = ReusableForm(request.form)
     if request.method == 'POST' and form.validate():
         mk_user = form.username.data
