@@ -5,17 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <div class="container">
         <h2>RouterOS user manager</h2>
+        <hr>
         <form action="" method="post" role="form">
             {{ form.csrf }}
             <div class="form-group">
                 <div>
-                    <label for="username">Usuario:</label>
-                    <select id="username" name="username">
-                        <option value="adminguayama">adminguayama</option>
-                        <option value="adminpanella">adminpanella</option>
-                        <option value="adminvidela">adminvidela</option>
-                        <option value="adminmaillo">adminmaillo</option>
-                    </select>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Local users</label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect01">
+                            <option selected>Choose...</option>
+                            <option value="adminguayama">adminguayama</option>
+                            <option value="adminpanella">adminpanella</option>
+                            <option value="adminvidela">adminvidela</option>
+                            <option value="adminmaillo">adminmaillo</option>
+                        </select>
+                    </div>
                 </div>
                 <div>
                     <label for="password">Password:</label>
