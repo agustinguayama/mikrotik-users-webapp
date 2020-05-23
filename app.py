@@ -15,7 +15,7 @@ app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 
 celery = make_celery(app)
 class ReusableForm(Form):
-    username = StringField('Name:', validators=[InputRequired(), Length(min=6, max=35)])
+    username = StringField('Name:', validators=[InputRequired()])
     password = PasswordField('Password:', validators=[InputRequired(), Length(min=3)])
     confirm_password = PasswordField('confirm_password:', validators=[EqualTo('password')])
 
@@ -26,23 +26,25 @@ def user_create():
     if request.method == 'POST' and form.validate():
         mk_user = form.username.data
         mk_pass = form.password.data
-        #print('Username: ', mk_user)
-        #print('Password: ', mk_pass)
+        print('DEBUG: Valid attemp!\n')
+        print('DEBUG: Username: ', mk_user)
+        print('DEBUG: Password: ', mk_pass)
         flash('Initiating router connections for ' + mk_user)
-        call_routers(input_username=mk_user, input_password=mk_pass)
+        call_routers.delay(mk_user, mk_pass)
         print('Done.')
     else:
         flash('Error: Check the passwords')
-        #print(form.username.data)
-        #print(form.password.data)
-        #print(form.confirm_password.data)
+        print('DEBUG: INvalid attemp!\n')
+        print(form.username.data)
+        print(form.password.data)
+        print(form.confirm_password.data)
     return render_template('index.html', form=form)
 
 
 @celery.task(name='app.call_routers')
-def call_routers():
+def call_routers(mk_user, mk_pass):
     return all_devices(mk_user, mk_pass)
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host='0.0.0.0')
