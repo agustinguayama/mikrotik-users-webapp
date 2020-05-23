@@ -23,7 +23,7 @@ username = 'hh4444444'
 userpass = '344444433'
 
 
-def all_devices(input_username=None,input_password=None):
+def all_devices(input_username, input_password):
     conf = get_conf()
 
     for line in conf['input_file']:
@@ -50,7 +50,7 @@ def get_conf(): # look for config in config file
 
 
 class Device:
-    def __init__(self, ip, device_name, input_username,input_password):
+    def __init__(self, ip, device_name, input_username, input_password):
         if not input_password: #if the password comes empty
             return
         self.device_name = device_name
