@@ -18,21 +18,29 @@ timestr = time.strftime("%Y%m%d-%H%M%S")
 report = {}
 
 # Username and password wich is going to be created, or whose password is going to be updated
-#TODO: work on username and password input for standalone instances
-username = 'hh4444444'
-userpass = '344444433'
+# TODO: work on username and password input for standalone instances
+# username = 'hh4444444'
+# userpass = '344444433'
 
 
 def all_devices(input_username=None,input_password=None):
     conf = get_conf()
-
+    routers_count = sum(1 for router in conf['input_file'])
+    device_ord = 0
+    report = {}
+    all_devices.status = "Initial state"
     for line in conf['input_file']:
+        device_ord = + 1
         ipmk = line.get("Addresses")
         namemk = line.get("Name")
+        all_devices.status = "Procesing device " + str(device_ord) + " of " + str(routers_count)
         if __name__ == "__main__": # If runs as standalone, you get real time report of what's being procesed
             aux_my_print('Procesando equipo:\t\t\t' + namemk + '\n')
         router = Device(ipmk, namemk, input_username, input_password)
-        router.createusers()
+        router.createuse()
+        if "error" in router.status:
+            all_devices.report[namemk] = router.status
+
 
 def get_conf(): # look for config in config file
     conf_dict = {}
@@ -57,6 +65,7 @@ class Device:
         self.ip = ip
         self.input_username = input_username
         self.input_password = input_password
+        self.status = "Initiating"
 
     def connect(self):
         conf = get_conf()
@@ -73,10 +82,12 @@ class Device:
             )
         except Exception as err:
             print('Problem connecting to ' + self.device_name + '. Error was: ' + str(err))
+            self.status = "Connection error"
             return err
-        return mkapi
+        self.status = "Connection completed"
+        return
 
-    def createusers(self):
+    def createuser(self):
         try:
             device = self.connect()
             create_params = {
@@ -101,8 +112,10 @@ class Device:
                 print('User ' + self.input_username + ' created with password ' + self.input_password + ' in device: ' + self.device_name)
 
         except Exception as err:
+            self.status = "CreateUser error"
             print('Problem with ' + self.device_name + '. Error msj: ' + str(err))
             return err
+        self.status = "CreateUser completed"
         return
 
 def args_parser():

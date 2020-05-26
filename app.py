@@ -39,8 +39,10 @@ def user_create():
     return render_template('index.html', form=form)
 
 
-@celery.task(name='app.call_routers')
-def call_routers():
+@celery.task(name='app.call_routers', bind=True)
+def call_routers(self):
+    all_devices(mk_user, mk_pass)
+    self.update_state = all_devices.status
     return all_devices(mk_user, mk_pass)
 
 
